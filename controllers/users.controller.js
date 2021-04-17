@@ -8,7 +8,7 @@ const addUser = (req,res)=>{
     let result = findUserById(id);
 
     if (!id) {
-        return res.status(200).json({error: 'enter id'})
+        return res.status(200).json({error: 'Enter id'})
     } 
     else if (result) {
         return res.status(200).json({error: 'User exist in DB'})
@@ -19,13 +19,17 @@ const addUser = (req,res)=>{
         credit: credit
     };
     users.push(obj);
-    fs.writeFileSync('./users.json', JSON.stringify(users));
-    return res.send(obj);
+    try {
+        fs.writeFileSync('./users.json', JSON.stringify(users));
+        return res.send(obj);
+    } catch(err) {
+        console.error(err);
+    }   
 }
 
 const getUsers = (req,res)=>{
     if(usersJson.length == 0)
-        return res.send('No users yet');
+        return res.status(200).send('No users yet');
     else
         return res.status(200).json({users : usersJson});
 }
@@ -36,7 +40,7 @@ const getUserById = (req,res)=>{
     if(user)
         return res.send(user);
     else
-        return res.send('This user is not exist');
+        return res.status(404).send('User not found');
 }
 
 const getUsersByAmount= (req,res)=>{
@@ -57,17 +61,22 @@ const depositing = (req,res) =>{
             users.map((u)=>{
                 if(u.id == req.params.id){
                     u.cash+=parseInt(req.params.amount);
-                    fs.writeFileSync('./users.json', JSON.stringify(users));
-                    return res.status(200).json({success: 'The deposit was made successfully'});
+                    try{
+                        fs.writeFileSync('./users.json', JSON.stringify(users));
+                        return res.status(200).json({success: 'The deposit was made successfully'});
+                    }catch(err){
+                        console.error(err);
+                        res.status(500).send('Internal Server Error');
+                    }   
                 }   
             })
         }
         else{
-            return res.status(200).json({success: 'This user is not exist'});
+            return res.status(404).send('User not found');
         }
     }
     else{
-        return res.status(200).json({success: 'Negative amount is not allowed'});
+        return res.status(400).send('Bad request, Negative amount is not allowed');
     }
 }
 
@@ -78,17 +87,22 @@ const updateCredit = (req,res) =>{
             users.map((u)=>{
                 if(u.id == req.params.id){
                     u.credit+=parseInt(req.params.credit);
-                    fs.writeFileSync('./users.json', JSON.stringify(users));
-                    return res.status(200).json({success: 'Credit updated'});
+                    try{
+                        fs.writeFileSync('./users.json', JSON.stringify(users));
+                        return res.status(200).json({success: 'Credit updated'});
+                    }catch(err) {
+                        console.error(err);
+                        res.status(500).send('Internal Server Error');
+                    }   
                 }
             })
         }
         else{
-            return res.status(200).json({success: 'This user is not exist'});
-            }
+            return res.status(404).send('User not found');
+        }
         }
     else{
-        return res.status(200).json({success: 'Negative credit is not allowed'});
+        return res.status(400).send('Bad request, Negative credit is not allowed');
     }  
 }
 
@@ -100,20 +114,25 @@ const withdrawMoney = (req,res)=>{
                 if(u.id == req.params.id){
                     if((u.cash+u.credit) >= req.params.cash){
                         u.cash-=parseInt(req.params.cash);
-                        fs.writeFileSync('./users.json', JSON.stringify(users));
-                        return res.status(200).json({success: 'Withdrawal of funds was successful'});
+                        try{
+                            fs.writeFileSync('./users.json', JSON.stringify(users));
+                            return res.status(200).json({success: 'Withdrawal of funds was successful'});
+                        }catch(err) {
+                            console.error(err);
+                            res.status(500).send('Internal Server Error');
+                        }   
                     }
                     else{
-                        return res.status(200).json({success: 'The requested amount could not be withdrawn'});
+                        return res.status(200).send('The requested amount could not be withdrawn');
                     }
                 }
             })}
             else{
-                return res.status(200).json({success: 'This user is not exist'});
+                return res.status(404).send('User not found');
             }
     }
     else{
-        return res.status(200).json({success: 'Negative cash is not allowed'});
+        return res.status(400).send('Bad request, Negative cash is not allowed');
     } 
 }
 
@@ -136,17 +155,17 @@ const transferring = (req,res)=>{
                             })
                         }
                         else{
-                            return res.status(200).json({success: 'The requested amount could not be transfer'});
+                            return res.status(200).send('The requested amount could not be transfer');
                         }
                     }
                 })}
                 else{
-                    return res.status(200).json({success: 'User is not exist'});
+                    return res.status(404).send('User not found');
                 }
-        }
-        else{
-            return res.status(200).json({success: 'Negative cash is not allowed'});
-        } 
+    }
+    else{
+        return res.status(400).send('Bad request, Negative cash is not allowed');
+    } 
 }
 
 const deleteUser = (req,res) =>{
@@ -162,7 +181,7 @@ const deleteUser = (req,res) =>{
         })
     }
     else
-        return res.send('This user is not exist');
+        return res.status(404).send('User not found');
 }
 
 
