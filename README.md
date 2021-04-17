@@ -2,9 +2,9 @@
 ### First Node.js project
 
 #### This project contains the following subjects:
-* express
-* fs
-* postman
+* Express
+* File System
+* Postman
 
 ## Description
 In this project, we are building a bank API where 
