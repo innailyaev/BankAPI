@@ -1,6 +1,5 @@
 // let uniqid = require('uniqid');
 const fs = require('fs');
-const { use } = require('../routes/users.route');
 const usersJson = require('../users.json');
 const users =usersJson;
 
@@ -25,7 +24,6 @@ const addUser = (req,res)=>{
 }
 
 const getUsers = (req,res)=>{
-    console.log(usersJson.length);
     if(usersJson.length == 0)
         return res.send('No users yet');
     else
@@ -42,19 +40,23 @@ const getUserById = (req,res)=>{
 }
 
 const depositing = (req,res) =>{
-    let result = findUserById(req.params.id);
-    if(result){
-        users.map((u)=>{
-            console.log(u);
-            if(u.id == req.params.id){
-                u.cash+=parseInt(req.params.amount);
-                fs.writeFileSync('./users.json', JSON.stringify(users));
-                return res.status(200).json({success: 'Amount of cash added to the user'});
-            }   
-        })
+    if((req.params.amount) > 0){
+        let result = findUserById(req.params.id);
+        if(result){
+            users.map((u)=>{
+                if(u.id == req.params.id){
+                    u.cash+=parseInt(req.params.amount);
+                    fs.writeFileSync('./users.json', JSON.stringify(users));
+                    return res.status(200).json({success: 'The deposit was made successfully'});
+                }   
+            })
+        }
+        else{
+            return res.status(200).json({success: 'This user is not exist'});
+        }
     }
     else{
-        return res.status(200).json({success: 'This user is not exist'});
+        return res.status(200).json({success: 'Negative amount is not allowed'});
     }
 }
 
