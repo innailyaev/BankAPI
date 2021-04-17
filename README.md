@@ -18,4 +18,5 @@ the following:
 * Transferring
 * Show details of user
 * Show details of all users
+* Fetch users by amount of cash they have
 * Delete user

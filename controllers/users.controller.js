@@ -39,6 +39,17 @@ const getUserById = (req,res)=>{
         return res.send('This user is not exist');
 }
 
+const getUsersByAmount= (req,res)=>{
+    const {amount} = req.params;
+    let usersByAmount = users.filter((u)=>{
+        return u.cash == amount;      
+    })
+    if(usersByAmount.length > 0)
+        return res.send(usersByAmount);
+    else
+        return res.send('No results');
+}
+
 const depositing = (req,res) =>{
     if((req.params.amount) > 0){
         let result = findUserById(req.params.id);
@@ -166,6 +177,7 @@ module.exports = {
     addUser,
     getUsers,
     getUserById,
+    getUsersByAmount,
     depositing,
     updateCredit,
     withdrawMoney,

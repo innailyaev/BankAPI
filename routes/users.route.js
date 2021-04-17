@@ -18,6 +18,8 @@ router.post('/', (req, res) => {
     userController.transferring(req,res);
 }).delete('/:userId',(req,res)=>{
     userController.deleteUser(req,res);
+}).get('/byAmount/:amount',(req,res)=>{
+    userController.getUsersByAmount(req,res);
 })
 
 module.exports = router;
