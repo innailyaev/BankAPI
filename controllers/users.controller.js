@@ -58,7 +58,7 @@ const depositing = (req,res) =>{
     }
 }
 
-const UpdateCredit = (req,res) =>{
+const updateCredit = (req,res) =>{
     if((req.params.credit)>0){
         let result = findUserById(req.params.id);
         if(result){
@@ -79,7 +79,7 @@ const UpdateCredit = (req,res) =>{
     }  
 }
 
-const WithdrawMoney = (req,res)=>{
+const withdrawMoney = (req,res)=>{
     if((req.params.cash) > 0){
     let result = findUserById(req.params.id);
         if(result){
@@ -104,7 +104,7 @@ const WithdrawMoney = (req,res)=>{
     } 
 }
 
-const Transferring = (req,res)=>{
+const transferring = (req,res)=>{
     if((req.params.cash) > 0){
         let result1 = findUserById(req.params.userId1);
         let result2 = findUserById(req.params.userId2);
@@ -165,8 +165,8 @@ module.exports = {
     getUsers,
     getUserById,
     depositing,
-    UpdateCredit,
-    WithdrawMoney,
-    Transferring,
+    updateCredit,
+    withdrawMoney,
+    transferring,
     deleteUser
 }

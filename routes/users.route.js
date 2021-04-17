@@ -11,11 +11,11 @@ router.post('/', (req, res) => {
 }).put('/depositing/:amount/:id',(req,res)=>{
     userController.depositing(req,res);
 }).put('/updateCredit/:credit/:id',(req,res)=>{
-    userController.UpdateCredit(req,res);
+    userController.updateCredit(req,res);
 }).put('/withdrawMoney/:cash/:id',(req,res)=>{
-    userController.WithdrawMoney(req,res);
+    userController.withdrawMoney(req,res);
 }).put('/transferring/:cash/:userId1/:userId2',(req,res)=>{
-    userController.Transferring(req,res);
+    userController.transferring(req,res);
 }).delete('/:userId',(req,res)=>{
     userController.deleteUser(req,res);
 })
